@@ -1,0 +1,30 @@
+version: "3.1"
+
+services:
+  gitlab:
+    image: gitlab/gitlab-ce
+    ports:
+    - 8443:443
+    - 8800:80
+    - "2222:22"
+    networks:
+      - build
+    deploy:
+      placement:
+        constraints: [node.labels.node-role == infra]
+    labels:
+      container-type: "build"
+    volumes:
+    - gitlab_config:/etc/gitlab
+    - gitlab_logs:/var/log/gitlab
+    - gitlab_data:/var/opt/gitlab
+
+networks:
+    build:
+      external:
+        name: build
+
+volumes:
+    gitlab_config:
+    gitlab_logs:
+    gitlab_data:
